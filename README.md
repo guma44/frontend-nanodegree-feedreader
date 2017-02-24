@@ -26,5 +26,4 @@ the information.
 
 # Authors
 
-Rafal Gumienny
-Udacity Team
+Rafal Gumienny and Udacity Team
