@@ -70,20 +70,55 @@ $(function() {
             expect($('body').hasClass('menu-hidden')).toBe(true);
         });
     });
-
-    /* TODO: Write a new test suite named "Initial Entries" */
-
-        /* TODO: Write a test that ensures when the loadFeed
-         * function is called and completes its work, there is at least
-         * a single .entry element within the .feed container.
-         * Remember, loadFeed() is asynchronous so this test will require
-         * the use of Jasmine's beforeEach and asynchronous done() function.
+    
+    /**
+     * Testing initial entries
+     */
+    describe("Initial Entries", function(){
+        /**
+         * Test async with done
          */
-
-    /* TODO: Write a new test suite named "New Feed Selection"
-
-        /* TODO: Write a test that ensures when a new feed is loaded
-         * by the loadFeed function that the content actually changes.
-         * Remember, loadFeed() is asynchronous.
+        beforeEach(function(done){
+            loadFeed(0, done);
+        });
+        
+        /** TEST 5
+         * Test when the loadFeed function completes its work there is at
+         * least one .entry in the .feed.
          */
+        it("contain at least one element", function(){
+            expect($(".feed").find(".entry").length).toBeGreaterThan(0);
+        });
+        
+    });
+
+    describe("New Feed Selection", function(){
+        var feed,
+            newFeed;
+        /**
+         * Test async with done
+         */
+        beforeEach(function(done){
+            loadFeed(0, function(){
+                feed = $(".feed").find(".entry > h2");
+                loadFeed(1, function(){
+                    newFeed = $(".feed").find(".entry > h2");
+                    done();
+                });
+            });
+        });
+        /** TEST 6
+         * Check if the loadFeed function is called with another feed the
+         * content of the page actually changes. To do this we compare
+         * the headers of each entry. Assuming the arrays could be of different
+         * length (???) we take the smallest number of elements.
+         */
+        it("changes the content of the website", function(){
+            // Test for headers equaliy (take the shorter list)
+            var entryLength = feed.length > newFeed.length ? newFeed.length : feed.length;
+            for (var i = 0; i < entryLength; i++) {
+                expect($(feed[i]).text()).not.toBe($(newFeed[i]).text());
+            }
+        });
+    });
 }());
